@@ -1,0 +1,15 @@
+.header {
+    padding: 20px;
+    background-color: var(--mat-option-selected-state-label-text-color) !important;
+
+    .logo {}
+
+    .nav {
+        float: right;
+
+        a {
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+    }
+}

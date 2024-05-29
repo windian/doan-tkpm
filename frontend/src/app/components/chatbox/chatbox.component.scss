@@ -1,0 +1,36 @@
+
+
+.chatbox {
+    margin: 20px;
+    width: 800px;
+
+    .avatar {
+      background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+      background-size: cover;
+    }
+
+    .mat-mdc-card-content.container {
+        border-style: solid none;
+        border-width: 1px 0;
+        border-color: var(--mat-standard-button-toggle-divider-color);
+        height: 400px;
+        overflow: auto;
+
+        .mat-mdc-chip-set.right {
+            .mat-mdc-chip {
+                margin-left: auto;
+                order: 2;
+            }
+        }
+    }
+
+
+    .content {
+    }
+    
+    .mat-mdc-card-actions {
+        .mat-mdc-form-field {
+            width: 100%;
+        }
+    }
+}
