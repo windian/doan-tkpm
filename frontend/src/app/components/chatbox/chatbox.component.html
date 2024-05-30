@@ -1,23 +1,24 @@
 <mat-card class="chatbox">
     <mat-card-header>
-      <div mat-card-avatar class="avatar"></div>
-      <mat-card-title>Shiba Inu</mat-card-title>
-      <mat-card-subtitle>Dog Breed</mat-card-subtitle>
+        <div mat-card-avatar class="avatar"></div>
+        <mat-card-title>Shiba Inu</mat-card-title>
+        <mat-card-subtitle>Dog Breed</mat-card-subtitle>
     </mat-card-header>
-    <mat-card-content class="container">
-        <mat-chip-set><mat-chip>How are you today?</mat-chip></mat-chip-set>
-        <mat-chip-set class="right"><mat-chip>I'm fine thank you</mat-chip></mat-chip-set>
-        <mat-chip-set class="right"><mat-chip>How about you?</mat-chip></mat-chip-set>
+    <mat-card-content class="content">
+        @for (msg of msgs; track msg) {
+        <div class="msg-container {{msg[0] ? 'right' : 'left'}}">
+            <p class="msg">{{msg[1]}}</p>
+        </div>
+        }
     </mat-card-content>
     <mat-card-actions>
         <mat-form-field subscriptSizing="dynamic">
-            <textarea matInput rows="1"></textarea>
-            <button mat-icon-button matSuffix><mat-icon>mic</mat-icon></button>
-            <button mat-icon-button matSuffix><mat-icon>send</mat-icon></button>
+            <textarea #msgInput matInput rows="1"></textarea>
+            <button mat-icon-button matSuffix (click)="micClick($event)"><mat-icon>mic</mat-icon></button>
+            <button mat-icon-button matSuffix (click)="sendClick($event)"><mat-icon>send</mat-icon></button>
         </mat-form-field>
     </mat-card-actions>
     <mat-card-footer>
         footer
     </mat-card-footer>
-  </mat-card>
-  
+</mat-card>

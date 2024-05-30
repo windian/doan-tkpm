@@ -1,33 +1,39 @@
-
-
 .chatbox {
-    margin: 20px;
+    margin: 10px;
     width: 800px;
 
     .avatar {
-      background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
-      background-size: cover;
+        background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+        background-size: cover;
     }
 
-    .mat-mdc-card-content.container {
+    .mat-mdc-card-content.content {
         border-style: solid none;
         border-width: 1px 0;
         border-color: var(--mat-standard-button-toggle-divider-color);
-        height: 400px;
+        height: 350px;
         overflow: auto;
 
-        .mat-mdc-chip-set.right {
-            .mat-mdc-chip {
+        .msg-container {
+            display: flex;
+            padding: 4px 0;
+
+            .msg {
+                margin: 0;
+                padding: 5px 12px;
+                color: var(--mdc-switch-unselected-focus-handle-color);
+                background-color: var(--mdc-switch-unselected-focus-track-color);
+                border-radius: 16px 16px 16px 16px;
+                white-space: pre-wrap;
+            }
+
+            &.right .msg {
                 margin-left: auto;
                 order: 2;
             }
         }
     }
 
-
-    .content {
-    }
-    
     .mat-mdc-card-actions {
         .mat-mdc-form-field {
             width: 100%;
