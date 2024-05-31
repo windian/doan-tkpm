@@ -2,6 +2,11 @@
 1881021 - Võ Việt Khánh
 1981035 - Nguyễn Thị Trúc Quyên
 
+# CHÚ Ý
+SpeechRecognition chỉ được hỗ trợ bởi các trình duyệt Chorme, Safari.
+IE và Edge không hỗ trợ SpeechRecognition.
+Firefox chỉ hỗ trợ SpeechRecognition trong bảng Firefox Nightly.
+
 # Cách install và start
 ## Cài đặt
 cd frontend
