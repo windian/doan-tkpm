@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ChatboxService } from '../../services/chatbox/chatbox.service';
+import { ChatboxService } from '../../services/Chatbox/chatbox.service';
 var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
 @Component({
@@ -61,13 +61,26 @@ export class ChatboxComponent {
   }
 
   async sendClick($event: MouseEvent) {
+    //var msg = this.msgInput.nativeElement.value;
+    //if (msg) {
+    //  this.addMessage(true, msg);
+    //  this.msgInput.nativeElement.value = '';
+
+    //  var res = await this.service.send({ msg: msg });
+    //  console.log('ChatboxComponent', res);
+    //}
     var msg = this.msgInput.nativeElement.value;
     if (msg) {
       this.addMessage(true, msg);
       this.msgInput.nativeElement.value = '';
 
-      var res = await this.service.send({ msg: msg });
-      console.log('ChatboxComponent', res);
+      this.service.send(msg).subscribe(response => {
+        const botResponse = response.choices[0].text.trim();
+        this.addMessage(false, botResponse);
+      }, error => {
+        console.error('Error:', error);
+        this.addMessage(false, 'Sorry, there was an error processing your request.');
+      });
     }
   }
 
