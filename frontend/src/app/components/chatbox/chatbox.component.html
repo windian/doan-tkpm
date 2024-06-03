@@ -6,10 +6,10 @@
     </mat-card-header>
     <mat-card-content class="content">
         @for (msg of msgs; track msg) {
-        <div class="msg-container {{msg[0] ? 'right' : 'left'}}">
+        <div class="msg-container {{msg.role == 'user' ? 'right' : 'left'}}">
             <p class="msg">
-                {{msg[1]}}
-                <span class="speak" (click)="speakClick(msg[1])">
+                {{msg.content}}
+                <span class="speak" (click)="speakClick(msg.content)">
                     <mat-icon>{{isSpeaking ? 'play_arrow' : 'record_voice_over'}}</mat-icon>
                 </span>
             </p>
@@ -18,11 +18,12 @@
     </mat-card-content>
     <mat-card-actions>
         <mat-form-field subscriptSizing="dynamic">
-            <textarea #msgInput matInput rows="3"></textarea>
+            <textarea #msgInput matInput rows="2"></textarea>
             <button mat-icon-button matSuffix (click)="micClick($event)" color="{{isRecording? 'warn' : 'primary'}}">
                 <mat-icon>{{isRecording ? 'stop_circle' : 'mic'}}</mat-icon>
             </button>
-            <button mat-icon-button matSuffix (click)="sendClick($event)"><mat-icon>send</mat-icon></button>
+            <button mat-icon-button matSuffix (click)="sendClick($event)"
+                [disabled]="disableChat"><mat-icon>send</mat-icon></button>
         </mat-form-field>
     </mat-card-actions>
     <mat-card-footer>

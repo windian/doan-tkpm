@@ -7,7 +7,13 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ChatboxService } from '../../services/Chatbox/chatbox.service';
+import { ChatboxService } from '../../services/chatbox/chatbox.service';
+import { OpenAI } from 'openai';
+import { Assistant } from 'openai/resources/beta/assistants';
+import { Thread } from 'openai/resources/beta/threads/threads';
+import { TextContentBlock } from 'openai/resources/beta/threads/messages';
+import { OpenAiService } from '../../services/open-ai.service';
+import { Message } from '../../models/chatbox/message.model';
 var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
 @Component({
@@ -22,12 +28,27 @@ var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecogniti
 export class ChatboxComponent {
   @ViewChild('msgInput') msgInput!: ElementRef<HTMLTextAreaElement>;
 
+  disableChat: boolean = false;
+
+  async sendClick($event: MouseEvent) {
+    if (this.disableChat) return;
+    this.disableChat = true;
+
+    var msg = this.msgInput.nativeElement.value;
+    if (msg) {
+      this.msgs.push({ role: 'user', content: msg });
+      this.msgInput.nativeElement.value = '';
+    }
+
+    this.msgs = await this.openAiService.chat(msg);
+    this.disableChat = false;
+  }
+
   isRecording: boolean = false;
 
-  msgs: [boolean, string][] = [
-    [false, 'How are you today?'],
-    [true, 'I\'m fine thank you'],
-    [true, 'How about you?']
+  msgs: Message[] = [
+    // { role: 'user', content: 'Hello, can we talk about flower today?' },
+    // { role: 'assistant', content: 'Of course! We can talk about flower today, I love flower. They are beautiful and amazing. What flower do you like?' },
   ];
 
   recognition!: SpeechRecognition;
@@ -35,12 +56,10 @@ export class ChatboxComponent {
   isSpeaking: boolean = false;
   synth = window.speechSynthesis;
 
-  constructor(public service: ChatboxService) {
+  constructor(
+    public service: ChatboxService,
+    public openAiService: OpenAiService) {
     this.voices = this.synth.getVoices();
-  }
-
-  addMessage(right: boolean, message: string) {
-    this.msgs.push([right, message]);
   }
 
   speakClick(msg: string) {
@@ -60,29 +79,29 @@ export class ChatboxComponent {
       this.startRecoding();
   }
 
-  async sendClick($event: MouseEvent) {
-    //var msg = this.msgInput.nativeElement.value;
-    //if (msg) {
-    //  this.addMessage(true, msg);
-    //  this.msgInput.nativeElement.value = '';
+  // async sendClick($event: MouseEvent) {
+  //   var msg = this.msgInput.nativeElement.value;
+  //   if (msg) {
+  //     this.addMessage(true, msg);
+  //     this.msgInput.nativeElement.value = '';
 
-    //  var res = await this.service.send({ msg: msg });
-    //  console.log('ChatboxComponent', res);
-    //}
-    var msg = this.msgInput.nativeElement.value;
-    if (msg) {
-      this.addMessage(true, msg);
-      this.msgInput.nativeElement.value = '';
+  //     var res = await this.service.send({ msg: msg });
+  //     console.log('ChatboxComponent', res);
+  //   }
+  // }
 
-      this.service.send(msg).subscribe(response => {
-        const botResponse = response.choices[0].text.trim();
-        this.addMessage(false, botResponse);
-      }, error => {
-        console.error('Error:', error);
-        this.addMessage(false, 'Sorry, there was an error processing your request.');
-      });
-    }
-  }
+  // async sendClick($event: MouseEvent) {
+  //   var msg = this.msgInput.nativeElement.value;
+  //   if (msg) {
+  //     this.addMessage(true, msg);
+  //     this.msgInput.nativeElement.value = '';
+
+  //     var res = await this.service.sendGPT(msg);
+  //     console.log('ChatboxComponent', res);
+  //     const botResponse = res.choices[0].message.content.trim();
+  //     this.addMessage(false, botResponse);
+  //   }
+  // }
 
   stopRecoding() {
     if (this.recognition) this.recognition.stop();

@@ -16,7 +16,7 @@
 
         .msg-container {
             display: flex;
-            padding: 4px 0;
+            padding: 4px 20% 4px 0;
 
             .msg {
                 margin: 0;
@@ -51,9 +51,19 @@
                 }
             }
 
-            &.right .msg {
-                margin-left: auto;
-                order: 2;
+            &.left {
+                padding-left: 0;
+                padding-right: 20%;
+            }
+
+            &.right {
+                padding-left: 20%;
+                padding-right: 0;
+
+                .msg {
+                    margin-left: auto;
+                    order: 2;
+                }
             }
         }
     }

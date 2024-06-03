@@ -1,3 +1,4 @@
 export class Message {
-    constructor(public msg: string) { }
+    role: 'user' | 'assistant' = 'user';
+    content: string = '';
 }
