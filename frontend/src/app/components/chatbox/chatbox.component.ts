@@ -14,6 +14,8 @@ import { Thread } from 'openai/resources/beta/threads/threads';
 import { TextContentBlock } from 'openai/resources/beta/threads/messages';
 import { OpenAiService } from '../../services/open-ai.service';
 import { Message } from '../../models/chatbox/message.model';
+import { Renderer2, OnInit } from '@angular/core';
+
 var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
 @Component({
@@ -25,7 +27,8 @@ var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecogniti
   templateUrl: './chatbox.component.html',
   styleUrl: './chatbox.component.scss'
 })
-export class ChatboxComponent {
+
+export class ChatboxComponent implements OnInit {
   @ViewChild('msgInput') msgInput!: ElementRef<HTMLTextAreaElement>;
 
   disableChat: boolean = false;
@@ -58,7 +61,8 @@ export class ChatboxComponent {
 
   constructor(
     public service: ChatboxService,
-    public openAiService: OpenAiService) {
+    public openAiService: OpenAiService,
+    private renderer: Renderer2) {
     this.voices = this.synth.getVoices();
   }
 
@@ -78,7 +82,9 @@ export class ChatboxComponent {
     else
       this.startRecoding();
   }
-
+  ngOnInit(): void {
+    this.loadExternalScript();
+  }
   // async sendClick($event: MouseEvent) {
   //   var msg = this.msgInput.nativeElement.value;
   //   if (msg) {
@@ -140,5 +146,22 @@ export class ChatboxComponent {
     this.recognition.onerror = function (event) {
       that.isRecording = false;
     }
+  }
+    private loadExternalScript() {
+    const script = this.renderer.createElement('script');
+    script.type = 'text/javascript';
+    script.text = `
+      var lbplugin_event_opt={"extension_enable":true,"dict_type":1,"dbclk_event":{"trigger":"none","enable":true,"display":2},"select_event":{"trigger":"none","enable":true,"display":1}};
+      function loadScript(t,e){var n=document.createElement("script");n.type="text/javascript",n.readyState?n.onreadystatechange=function(){("loaded"===n.readyState||"complete"===n.readyState)&&(n.onreadystatechange=null,e())}:n.onload=function(){e()},n.src=t,document.getElementsByTagName("head")[0].appendChild(n)}
+      setTimeout(function(){
+        if (document.getElementById("lbdictex_find_popup") == null) {
+          loadScript("https://stc-laban.zdn.vn/dictionary/js/plugin/lbdictplugin.min.js?" + Date.now() % 1e4, function(){
+            lbDictPlugin.init(lbplugin_event_opt)
+          });
+        }
+      }, 1000);
+    `;
+    this.renderer.appendChild(document.head, script);
+  
   }
 }
