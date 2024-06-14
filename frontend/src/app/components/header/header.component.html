@@ -2,7 +2,12 @@
     <a mat-flat-button class="logo" href="/">Thiết Kế phần mềm</a>
     <nav class="nav">
         <a mat-flat-button href="/chatbox">Chatbox</a>
-        <a mat-flat-button href="/vocabulary">Vocabulary</a>
         <a mat-flat-button href="/about-us">About Us</a>
+        <!-- <a mat-flat-button href="/login">Login</a> -->
+        <!-- <a mat-flat-button href="/register">Register</a>
+        <a mat-flat-button href="/change-password">Change Password</a> -->
+        <button mat-flat-button (click)="openLoginDialog()">Login</button>
+        <button mat-flat-button (click)="openRegisterDialog()">Register</button>
+        <button mat-flat-button (click)="openChangePasswordDialog()">Change Password</button>
     </nav>
 </header>

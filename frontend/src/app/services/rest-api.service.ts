@@ -9,7 +9,9 @@ export class RestApiService {
 
   constructor(private httpClient: HttpClient) { }
 
-  post<ReqType, ResType>(path: string, body: ReqType,
+  post<ReqType, ResType>(
+    path: string,
+    body: ReqType,
     headers?: { [name: string]: string }): Promise<ResType> {
     return new Promise<ResType>((resolve, reject) => {
       headers = {

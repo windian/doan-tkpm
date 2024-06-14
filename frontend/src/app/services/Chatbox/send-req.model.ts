@@ -1,3 +1,6 @@
 export class SendReq {
-    constructor(public msg: string) { }
+    constructor(
+        public user_id: number,
+        public msg: string
+    ) { }
 }

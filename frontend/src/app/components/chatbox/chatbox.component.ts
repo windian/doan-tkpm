@@ -8,13 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ChatboxService } from '../../services/chatbox/chatbox.service';
-import { OpenAI } from 'openai';
-import { Assistant } from 'openai/resources/beta/assistants';
-import { Thread } from 'openai/resources/beta/threads/threads';
-import { TextContentBlock } from 'openai/resources/beta/threads/messages';
-import { OpenAiService } from '../../services/open-ai.service';
-import { Message } from '../../models/chatbox/message.model';
 import { Renderer2, OnInit } from '@angular/core';
+import { Message } from '../../services/chatbox/message.model';
 
 var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -33,6 +28,12 @@ export class ChatboxComponent implements OnInit {
 
   disableChat: boolean = false;
 
+  async loadThread() {
+    const loadReq = await this.service.load({ user_id: 1 });
+    console.log(loadReq);
+    this.msgs = loadReq.msgs;
+  }
+
   async sendClick($event: MouseEvent) {
     if (this.disableChat) return;
     this.disableChat = true;
@@ -43,7 +44,9 @@ export class ChatboxComponent implements OnInit {
       this.msgInput.nativeElement.value = '';
     }
 
-    this.msgs = await this.openAiService.chat(msg);
+    const sendReq = await this.service.send({ user_id: 1, msg: msg });
+    console.log(sendReq);
+    this.msgs = sendReq.msgs;
     this.disableChat = false;
   }
 
@@ -61,7 +64,6 @@ export class ChatboxComponent implements OnInit {
 
   constructor(
     public service: ChatboxService,
-    public openAiService: OpenAiService,
     private renderer: Renderer2) {
     this.voices = this.synth.getVoices();
   }
@@ -82,32 +84,11 @@ export class ChatboxComponent implements OnInit {
     else
       this.startRecoding();
   }
-  ngOnInit(): void {
+
+  async ngOnInit(): Promise<void> {
+    await this.loadThread();
     this.loadExternalScript();
   }
-  // async sendClick($event: MouseEvent) {
-  //   var msg = this.msgInput.nativeElement.value;
-  //   if (msg) {
-  //     this.addMessage(true, msg);
-  //     this.msgInput.nativeElement.value = '';
-
-  //     var res = await this.service.send({ msg: msg });
-  //     console.log('ChatboxComponent', res);
-  //   }
-  // }
-
-  // async sendClick($event: MouseEvent) {
-  //   var msg = this.msgInput.nativeElement.value;
-  //   if (msg) {
-  //     this.addMessage(true, msg);
-  //     this.msgInput.nativeElement.value = '';
-
-  //     var res = await this.service.sendGPT(msg);
-  //     console.log('ChatboxComponent', res);
-  //     const botResponse = res.choices[0].message.content.trim();
-  //     this.addMessage(false, botResponse);
-  //   }
-  // }
 
   stopRecoding() {
     if (this.recognition) this.recognition.stop();
@@ -147,7 +128,8 @@ export class ChatboxComponent implements OnInit {
       that.isRecording = false;
     }
   }
-    private loadExternalScript() {
+
+  private loadExternalScript() {
     const script = this.renderer.createElement('script');
     script.type = 'text/javascript';
     script.text = `
@@ -162,6 +144,6 @@ export class ChatboxComponent implements OnInit {
       }, 1000);
     `;
     this.renderer.appendChild(document.head, script);
-  
+
   }
 }

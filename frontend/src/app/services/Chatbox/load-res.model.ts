@@ -1,5 +1,5 @@
 import { Message } from "./message.model";
 
-export class SendRes {
+export class LoadRes {
     msgs!: Message[]
 }

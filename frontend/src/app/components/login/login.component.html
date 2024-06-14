@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Login</h2>
+<mat-dialog-content>
+    <mat-form-field [style.width.px]=300>
+        <mat-label>Username or email</mat-label>
+        <input matInput [(ngModel)]="username" name="username">
+    </mat-form-field>
+    <br>
+    <mat-form-field [style.width.px]=300>
+        <mat-label>Password</mat-label>
+        <input matInput type="password" [(ngModel)]="password" name="password">
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button mat-flat-button color="primary" (click)="loginClick()">Login</button>
+</mat-dialog-actions>
